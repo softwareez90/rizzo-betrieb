@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leistungen | Rizzo Betrieb - Managed IT & Cloud</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Palette: Dark Tech / Neo-Brutalism subtly applied */
+            --bg-deep: #050505;
+            --bg-panel: #0f1012;
+            --primary: #CCFF00; /* Acid Lime */
+            --secondary: #6E44FF; /* Electric Purple */
+            --text-main: #EAEAEA;
+            --text-muted: #888888;
+            --border-light: rgba(255, 255, 255, 0.1);
+            --grid-gap: 20px;
+            --container: 1400px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 18px;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4 {
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+        }
+
+        h1 {
+            font-size: clamp(3rem, 8vw, 7rem);
+            text-transform: uppercase;
+        }
+
+        h2 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: 1rem;
+        }
+        
+        h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+            max-width: 60ch;
+            color: #ccc;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Layout Utilities */
+        .container {
+            width: 90%;
+            max-width: var(--container);
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 0;
+            z-index: 1000;
+            mix-blend-mode: difference;
+        }
+
+        .nav-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo::before {
+            content: '';
+            display: block;
+            width: 12px;
+            height: 12px;
+            background: var(--primary);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 80vh; /* Slightly shorter for subpage */
+            display: flex;
+            align-items: center;
+            position: relative;
+            padding-top: 80px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 50%;
+            right: -10%;
+            transform: translateY(-50%);
+            width: 60vw;
+            height: 60vw;
+            background: radial-gradient(circle, rgba(110,68,255,0.15) 0%, rgba(5,5,5,0) 70%);
+            z-index: -1;
+            filter: blur(60px);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-content h1 span {
+            display: block;
+            color: var(--text-muted);
+            -webkit-text-stroke: 1px var(--text-main);
+            color: transparent;
+            transition: color 0.5s ease;
+        }
+
+        .hero-content h1 span:hover {
+            color: var(--primary);
+            -webkit-text-stroke: 0;
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 2rem;
+            padding: 1rem 2.5rem;
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            font-family: 'JetBrains Mono', monospace;
+            text-decoration: none;
+            text-transform: uppercase;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .btn:hover {
+            background: var(--primary);
+            color: var(--bg-deep);
+            box-shadow: 0 0 20px rgba(204, 255, 0, 0.3);
+        }
+
+        /* Bento Grid Layout for Services */
+        .services-section {
+            padding: 120px 0;
+        }
+
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            grid-auto-rows: minmax(300px, auto);
+            gap: var(--grid-gap);
+        }
+
+        .bento-item {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-light);
+            padding: 2.5rem;
+            border-radius: 4px;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bento-item:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+
+        .bento-large {
+            grid-column: span 8;
+        }
+
+        .bento-tall {
+            grid-column: span 4;
+            grid-row: span 2;
+            background: linear-gradient(145deg, var(--bg-panel), #1a1c20);
+            border: 1px solid rgba(110, 68, 255, 0.2);
+        }
+
+        .bento-medium {
+            grid-column: span 4;
+        }
+
+        .service-icon {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: block;
+        }
+        
+        .bento-tall .service-icon {
+            color: var(--secondary);
+            font-size: 2rem;
+        }
+
+        .service-list {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .service-list li {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .service-list li::before {
+            content: '>';
+            color: var(--primary);
+            margin-right: 10px;
+        }
+
+        /* Status Bar / Tech Details */
+        .status-bar {
+            border-top: 1px solid var(--border-light);
+            border-bottom: 1px solid var(--border-light);
+            padding: 1rem 0;
+            margin: 0 0 60px 0;
+            display: flex;
+            justify-content: space-between;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .status-item span {
+            color: var(--primary);
+        }
+
+        /* About / Split Section */
+        .about-section {
+            padding: 100px 0;
+            background: linear-gradient(to bottom, var(--bg-deep), #0a0a0a);
+        }
+
+        .split-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .highlight-text {
+            font-size: 1.5rem;
+            color: white;
+            border-left: 2px solid var(--primary);
+            padding-left: 20px;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--border-light);
+            padding: 80px 0 40px;
+            margin-top: 80px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .footer-col h4 {
+            color: white;
+            margin-bottom: 20px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-col ul li a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-col ul li a:hover {
+            color: var(--primary);
+        }
+
+        .copyright {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-family: 'JetBrains Mono', monospace;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-light);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 1024px) {
+            .bento-large, .bento-tall, .bento-medium {
+                grid-column: span 12; /* Stack all cards */
+                grid-row: span 1;
+            }
+            
+            .nav-links {
+                display: none; /* Simplified for this demo */
+            }
+            
+            .logo {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .split-layout {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="container nav-inner">
+            <a href="index.html" class="logo">RIZZO BETRIEB</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Start</a></li>
+                <li><a href="ueber-uns.html">Über uns</a></li>
+                <li><a href="leistungen.html" class="active">Leistungen</a></li>
+                <li><a href="kontakt.html">Kontakt</a></li>
+                <li><a href="impressum.html">Impressum</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-bg"></div>
+        <div class="container hero-content">
+            <p class="mono">/// SYSTEM ARCHITECTURE & OPERATIONS</p>
+            <h1>
+                Skalierbare<br>
+                <span>Infrastruktur</span>
+            </h1>
+            <p>
+                Wir bauen das digitale Rückgrat Ihres Unternehmens. Von Managed Services bis zur komplexen Cloud-Migration: Wir sorgen für Stabilität, Sicherheit und Performance, damit Sie sich auf Ihr Kerngeschäft konzentrieren können.
+            </p>
+            <div class="status-bar">
+                <div class="status-item">SYSTEM STATUS: <span>ONLINE</span></div>
+                <div class="status-item">UPTIME GOAL: <span>99.99%</span></div>
+                <div class="status-item">REGION: <span>HAMBURG / DE</span></div>
+            </div>
+        </div>
+    </header>
+
+    <section class="services-section">
+        <div class="container">
+            <div class="bento-grid">
+                
+                <!-- Managed Services (Large) -->
+                <div class="bento-item bento-large">
+                    <div>
+                        <span class="service-icon">[01]</span>
+                        <h3>Managed IT Services</h3>
+                        <p>
+                            Die IT-Abteilung, die niemals schläft. Wir übernehmen die komplette Betreuung Ihrer IT-Landschaft. Proaktives Monitoring verhindert Probleme, bevor sie entstehen.
+                        </p>
+                    </div>
+                    <ul class="service-list">
+                        <li>24/7 Server & Client Monitoring</li>
+                        <li>Automatisches Patch-Management</li>
+                        <li>First & Second Level Helpdesk</li>
+                        <li>Backup & Disaster Recovery Strategien</li>
+                    </ul>
+                </div>
+
+                <!-- Cyber Security (Tall) -->
+                <div class="bento-item bento-tall">
+                    <div>
+                        <span class="service-icon">🛡️ SEC_OPS</span>
+                        <h3>Cyber Security</h3>
+                        <p>
+                            Daten sind das neue Gold – und wir sind der Tresor. Wir implementieren Zero-Trust-Architekturen und schützen Ihre Endpunkte gegen moderne Bedrohungen.
+                        </p>
+                        <ul class="service-list" style="margin-top: 2rem;">
+                            <li>Penetration Testing</li>
+                            <li>Endpoint Detection & Response (EDR)</li>
+                            <li>Managed Firewall</li>
+                            <li>E-Mail Security Gateway</li>
+                            <li>ISO 27001 Compliance Beratung</li>
+                        </ul>
+                    </div>
+                    <a href="kontakt.html" class="btn" style="margin-top: auto; text-align: center; font-size: 0.8rem;">Audit anfragen</a>
+                </div>
+
+                <!-- Cloud (Medium) -->
+                <div class="bento-item bento-medium">
+                    <span class="service-icon">[02]</span>
+                    <h3>Cloud Solutions</h3>
+                    <p>
+                        Egal ob Azure, AWS oder Private Cloud. Wir migrieren Ihre Workloads sicher und skalierbar.
+                    </p>
+                    <ul class="service-list">
+                        <li>Cloud Migration & Architektur</li>
+                        <li>Microsoft 365 Integration</li>
+                        <li>Hybrid-Cloud Setups</li>
+                    </ul>
+                </div>
+
+                <!-- Hardware (Medium) -->
+                <div class="bento-item bento-medium">
+                    <span class="service-icon">[03]</span>
+                    <h3>Hardware & Lifecycle</h3>
+                    <p>
+                        Beschaffung und Management von High-End Hardware für anspruchsvolle Arbeitsplätze.
+                    </p>
+                    <ul class="service-list">
+                        <li>Client-Beschaffung (Apple/Lenovo)</li>
+                        <li>Server-Infrastruktur</li>
+                        <li>Device-as-a-Service (DaaS)</li>
+                    </ul>
+                </div>
+
+                <!-- Consulting (Large) -->
+                <div class="bento-item bento-large">
+                    <div>
+                        <span class="service-icon">[04]</span>
+                        <h3>IT-Consulting & Digitalisierung</h3>
+                        <p>
+                            Technologie ist nur so gut wie die Strategie dahinter. Wir analysieren Ihre Geschäftsprozesse und identifizieren Digitalisierungspotenziale, die echten ROI liefern.
+                        </p>
+                    </div>
+                    <div style="margin-top: 1rem; display: flex; gap: 20px; flex-wrap: wrap;">
+                        <span class="mono" style="border: 1px solid var(--border-light); padding: 5px 10px;">Prozessanalyse</span>
+                        <span class="mono" style="border: 1px solid var(--border-light); padding: 5px 10px;">DSGVO</span>
+                        <span class="mono" style="border: 1px solid var(--border-light); padding: 5px 10px;">IT-Strategie</span>
+                    </div>
+                </div>
+
+                <!-- CTA Box (Medium) -->
+                <div class="bento-item bento-medium" style="background: var(--primary); border-color: var(--primary);">
+                    <div style="color: var(--bg-deep);">
+                        <span class="service-icon" style="color: var(--bg-deep); font-weight: bold;">>> NEXT STEP</span>
+                        <h3 style="color: var(--bg-deep);">Bereit für das Upgrade?</h3>
+                        <p style="color: var(--bg-deep); opacity: 0.8;">
+                            Lassen Sie uns über Ihre Infrastruktur sprechen. Unverbindlich und auf Augenhöhe.
+                        </p>
+                        <a href="kontakt.html" style="color: var(--bg-deep); text-decoration: underline; font-weight: bold; font-family: 'JetBrains Mono', monospace;">TERMIN BUCHEN -></a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="about-section">
+        <div class="container split-layout">
+            <div>
+                <p class="mono">WORKFLOW</p>
+                <h2>Der Rizzo-Prozess</h2>
+                <p>
+                    Wir verkaufen keine Produkte, wir implementieren Lösungen. Unser Onboarding-Prozess stellt sicher, dass wir Ihre Umgebung zu 100% verstehen, bevor wir die erste Zeile Code ändern.
+                </p>
+            </div>
+            <div>
+                <div class="highlight-text">
+                    <div style="margin-bottom: 30px;">
+                        <span class="mono">PHASE 1: ANALYSE</span>
+                        <p style="margin-top: 10px; font-size: 1rem;">Umfassender Audit der bestehenden Systeme. Identifikation von Sicherheitslücken und Bottlenecks.</p>
+                    </div>
+                    <div style="margin-bottom: 30px;">
+                        <span class="mono">PHASE 2: TRANSFORMATION</span>
+                        <p style="margin-top: 10px; font-size: 1rem;">Migration und Härtung der Systeme. Implementierung von Monitoring-Tools und Backup-Routinen.</p>
+                    </div>
+                    <div>
+                        <span class="mono">PHASE 3: OPERATIONS</span>
+                        <p style="margin-top: 10px; font-size: 1rem;">Laufende Wartung, Reporting und strategische Weiterentwicklung durch Ihren persönlichen Tech-Lead.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                
+                <div class="footer-col">
+                    <h4>RIZZO BETRIEB</h4>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">
+                        Managed-IT und Cloud Services für Unternehmen, die vorausdenken.
+                    </p>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Navigation</h4>
+                    <ul>
+                        <li><a href="index.html">Startseite</a></li>
+                        <li><a href="ueber-uns.html">Über uns</a></li>
+                        <li><a href="leistungen.html">Leistungen</a></li>
+                        <li><a href="kontakt.html">Kontakt</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Kontakt</h4>
+                    <address style="font-style: normal; color: var(--text-muted); line-height: 1.8;">
+                        Eppendorfer Baum 35<br>
+                        20249 Hamburg<br><br>
+                        <a href="mailto:b2b@rizzo-betrieb.de" style="color: var(--primary); text-decoration: none;">b2b@rizzo-betrieb.de</a>
+                    </address>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Rechtliches</h4>
+                    <ul>
+                        <li><a href="impressum.html">Impressum</a></li>
+                        <li><a href="#">Datenschutz</a></li>
+                    </ul>
+                </div>
+
+            </div>
+            <div class="copyright">
+                &copy; 2026 Rizzo Betrieb. Alle Rechte vorbehalten. Design: Award-Winning Studio.
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
